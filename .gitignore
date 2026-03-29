@@ -1,0 +1,31 @@
+# Build artifacts
+build/
+build-*/
+*/build/
+*/build-*/
+
+# Compiled libraries and objects
+*.o
+*.a
+*.so
+*.lib
+
+# Executables
+LordsOfMidnight
+DoomdarksRevenge
+
+# Claude Code
+CLAUDE.md
+PLAN.md
+AMIGAOS4_INTEGRATION.md
+.claude/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db

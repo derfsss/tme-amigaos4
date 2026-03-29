@@ -1,0 +1,12 @@
+[submodule "axmol/src"]
+	path = axmol/src
+	url = https://github.com/derfsss/axmol.git
+	branch = amigaos4
+[submodule "glfw/src"]
+	path = glfw/src
+	url = https://github.com/derfsss/glfw.git
+	branch = amigaos4
+[submodule "lords-of-midnight/src"]
+	path = lords-of-midnight/src
+	url = https://github.com/derfsss/The-Lords-Of-Midnight.git
+	branch = amigaos4
