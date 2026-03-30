@@ -25,16 +25,15 @@ add_compile_definitions(
     AX_ENABLE_CACHE_TEXTURE_DATA=0
     STBI_NO_THREAD_LOCALS
     AX_ENABLE_PREMULTIPLIED_ALPHA=1
+    NO_OLD_TYPE_DEFINES
+    YASIO_HAVE_KCP=0
 )
 
 ##############################################################################
 # Third-party: build from bundled source
 ##############################################################################
 
-# GLAD (OpenGL loader)
-add_library(glad STATIC ${AX_ROOT}/3rdparty/glad/src/gl.c)
-target_include_directories(glad PUBLIC ${AX_ROOT}/3rdparty/glad/include)
-# Don't define GLAD_GLES2 — the #ifdef guard skips the GLES2/EGL section entirely
+# GLAD is replaced by our shim + libGLESv2.a for AmigaOS4
 
 # ConvertUTF
 file(GLOB CONVERTUTF_SRC ${AX_ROOT}/3rdparty/ConvertUTF/*.c ${AX_ROOT}/3rdparty/ConvertUTF/*.cpp)
@@ -182,6 +181,7 @@ list(FILTER AX_CORE_SRC EXCLUDE REGEX ".*VlcMediaEngine.*")
 add_library(axmol STATIC ${AX_CORE_SRC})
 
 target_include_directories(axmol PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/shim
     ${AX_ROOT}
     ${AX_ROOT}/3rdparty
     ${AX_ROOT}/3rdparty/webp/src/webp
@@ -205,7 +205,6 @@ target_link_directories(axmol PUBLIC ${OPENAL_LIB_PATH})
 
 # Link bundled third-party libs
 target_link_libraries(axmol PUBLIC
-    glad
     ConvertUTF
     clipper2
     poly2tri
@@ -227,9 +226,10 @@ target_link_libraries(axmol PUBLIC
 
 # Link SDK pre-built libraries
 target_link_libraries(axmol PUBLIC
-    glfw3
+    ${GLFW_LIB_PATH}/libglfw3.a
     openal
-    GL
+    GLESv2
+    ogles2
     freetype
     png16
     jpeg
@@ -241,8 +241,10 @@ target_link_libraries(axmol PUBLIC
     pthread
 )
 
-# Precompiled header — axmol.h includes all engine headers
-target_precompile_headers(axmol PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:${AX_ROOT}/core/axmol.h>")
+# PCH disabled — GCC system_header pragma in PCH wrapper prevents
+# GL function declarations from being visible to source files.
+# Use -include axmol.h directly instead (slower but correct).
+target_compile_options(axmol PRIVATE -include ${AX_ROOT}/core/axmol.h)
 
 message(STATUS "axmol AmigaOS4 standalone build configured")
 message(STATUS "  Core sources: ${AX_ROOT}/core/")

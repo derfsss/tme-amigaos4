@@ -7,7 +7,6 @@
 #   make axmol        Build engine library only
 #   make openal       Build OpenAL Soft only
 #   make glfw         Build GLFW only
-#   make vulkan-sdk   Build Vulkan SDK only
 #   make clean        Clean all build artifacts
 #   make strip        Strip both game binaries
 
@@ -16,17 +15,11 @@ DOCKER_RUN   = docker run --rm -v "$(CURDIR):/work" -w /work $(DOCKER_IMAGE)
 TOOLCHAIN    = /work/axmol/cmake/amigaos4.cmake
 JOBS         = $(shell nproc)
 
-.PHONY: all lom ddr axmol openal glfw vulkan-sdk clean strip
+.PHONY: all lom ddr axmol openal glfw clean strip
 
 all: lom ddr
 
-# ── Phase 1: Vulkan SDK ──────────────────────────────────────────────
-vulkan-sdk: vulkan-sdk/lib/libvulkan_loader.a
-
-vulkan-sdk/lib/libvulkan_loader.a:
-	$(DOCKER_RUN) sh -c "cd /work/vulkan-sdk && make -f Makefile all"
-
-# ── Phase 2: GLFW ────────────────────────────────────────────────────
+# ── GLFW ─────────────────────────────────────────────────────────────
 glfw: glfw/build/src/libglfw3.a
 
 glfw/build/src/libglfw3.a:
@@ -106,7 +99,6 @@ strip: lom ddr
 	@ls -lh lords-of-midnight/build-lom/LordsOfMidnight lords-of-midnight/build-ddr/DoomdarksRevenge
 
 clean:
-	rm -rf vulkan-sdk/build vulkan-sdk/lib
 	rm -rf glfw/build
 	rm -rf openal-soft/build
 	rm -rf axmol/build

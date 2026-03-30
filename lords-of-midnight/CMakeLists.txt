@@ -33,6 +33,7 @@ add_compile_definitions(
     AX_ENABLE_CACHE_TEXTURE_DATA=0
     STBI_NO_THREAD_LOCALS
     AX_ENABLE_PREMULTIPLIED_ALPHA=1
+    NO_OLD_TYPE_DEFINES
     _OS_DESKTOP_=1
     _OS_AMIGAOS4_=1
     _UNIX_=1
@@ -91,7 +92,7 @@ target_include_directories(${TME_EXE_NAME} PRIVATE
     ${AX_ROOT}/3rdparty/ghc
     ${AX_ROOT}/3rdparty/ntcvt
     ${AX_ROOT}/3rdparty/pugixml
-    ${AX_ROOT}/3rdparty/glad/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../axmol/shim
     ${AX_ROOT}/3rdparty/mio/include
     ${AX_ROOT}/3rdparty/yasio
     ${AX_ROOT}/core
@@ -124,7 +125,6 @@ target_link_libraries(${TME_EXE_NAME} PRIVATE
     # axmol engine + bundled 3rdparty
     axmol
     fmtlib
-    glad
     ConvertUTF
     clipper2
     poly2tri
@@ -138,11 +138,12 @@ target_link_libraries(${TME_EXE_NAME} PRIVATE
     websocket-parser
     ogg
     yasio
-    # Our sub-project libraries
-    glfw3
+    # Our sub-project libraries (full path to avoid SDK version)
+    ${GLFW_BUILD}/libglfw3.a
     openal
     # SDK pre-built libraries
-    GL
+    GLESv2
+    ogles2
     freetype
     png16
     jpeg
