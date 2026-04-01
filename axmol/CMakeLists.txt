@@ -96,7 +96,7 @@ target_include_directories(websocket-parser PUBLIC ${AX_ROOT}/3rdparty/websocket
 # ogg (for audio)
 file(GLOB_RECURSE OGG_SRC ${AX_ROOT}/3rdparty/ogg/src/*.c)
 # Exclude tool/test files that don't compile standalone
-list(FILTER OGG_SRC EXCLUDE REGEX "psytune|tone|barkmel")
+list(FILTER OGG_SRC EXCLUDE REGEX "psytune|tone|barkmel|opus/")
 add_library(ogg STATIC ${OGG_SRC})
 target_include_directories(ogg PUBLIC ${AX_ROOT}/3rdparty/ogg/include ${AX_ROOT}/3rdparty/ogg/src)
 target_include_directories(ogg PRIVATE ${AX_ROOT}/3rdparty/ogg/src/vorbis)
